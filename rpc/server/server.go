@@ -20,7 +20,7 @@ type DeployServiceServer struct {
 
 func (s *DeployServiceServer) Deploy(ctx context.Context, req *rpc.DeployRequest) (*rpc.DeployResponse, error) {
 	if req.Key == "" || req.Key != s.Conf.Key {
-		log.Println("DeployService: Uanthenticated")
+		log.Println("DeployService: Unauthenticated")
 		return nil, status.Errorf(codes.Unauthenticated, "Invalid Key")
 	}
 
