@@ -1,7 +1,6 @@
 package server
 
 import (
-	"bytes"
 	"context"
 	"log"
 	"os/exec"
@@ -28,18 +27,18 @@ func (s *DeployServiceServer) Deploy(ctx context.Context, req *rpc.DeployRequest
 	log.Println("DeployService: Started")
 
 	cmd := exec.Command("/bin/sh", "-c", s.Conf.ScriptLine(req.Ref))
-	var outb, errb bytes.Buffer
-	cmd.Stdout = &outb
-	cmd.Stderr = &errb
 
-	cmd.Run()
+	out, err := cmd.CombinedOutput()
+	output := string(out)
 
-	outS := outb.String()
-	errS := errb.String()
+	log.Printf("DeployService: Output:\n%s\n", output)
 
-	log.Printf("DeployService: Output:\n%s\n", outS)
-	log.Printf("DeployService: Error:\n%s\n", errS)
+	errStr := ""
+	if err != nil {
+		errStr = err.Error()
+		log.Printf("DeployService: Error:\n%s\n", errStr)
+	}
 
 	log.Println("DeployService: Finished, took", time.Since(t))
-	return &rpc.DeployResponse{Output: outS, Error: errS}, nil
+	return &rpc.DeployResponse{Output: output, Error: errStr}, nil
 }
