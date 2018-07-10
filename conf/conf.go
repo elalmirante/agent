@@ -7,6 +7,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	DefaultPort = "9095"
+)
+
 type Configuration struct {
 	Port   string
 	Key    string
@@ -32,6 +36,11 @@ func Parse(path string) (*Configuration, error) {
 	err = yaml.Unmarshal(confBytes, &conf)
 	if err != nil {
 		return nil, err
+	}
+
+	// add default port if not present.
+	if conf.Port == "" {
+		conf.Port = DefaultPort
 	}
 
 	return conf, nil
