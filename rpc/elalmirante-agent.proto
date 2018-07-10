@@ -1,0 +1,16 @@
+syntax = "proto3";
+package rpc;
+
+service DeployService {
+  rpc Deploy (DeployRequest) returns (DeployResponse);
+}
+
+message DeployRequest {
+  string key = 1;
+  string ref = 2;
+}
+
+message DeployResponse {
+  string output = 1;
+  string error = 2;
+}
